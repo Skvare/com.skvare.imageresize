@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<CustomData>
+    <OptionGroups>
+        <OptionGroup>
+            <name>image_styles</name>
+            <title>Image Style</title>
+            <description></description>
+            <data_type>String</data_type>
+            <is_reserved>1</is_reserved>
+            <is_active>1</is_active>
+        </OptionGroup>
+    </OptionGroups>
+    <OptionValues>
+        <OptionValue>
+            <label>digital_packet</label>
+            <value>122x125</value>
+            <name>digital_packet</name>
+            <filter>0</filter>
+            <is_default>0</is_default>
+            <weight>1</weight>
+            <description></description>
+            <is_optgroup>0</is_optgroup>
+            <is_reserved>1</is_reserved>
+            <is_active>1</is_active>
+            <option_group_name>image_styles</option_group_name>
+        </OptionValue>
+        <OptionValue>
+            <label>thumbnail</label>
+            <value>200x200</value>
+            <name>thumbnail</name>
+            <filter>0</filter>
+            <is_default>0</is_default>
+            <weight>2</weight>
+            <description></description>
+            <is_optgroup>0</is_optgroup>
+            <is_reserved>1</is_reserved>
+            <is_active>1</is_active>
+            <option_group_name>image_styles</option_group_name>
+        </OptionValue>
+    </OptionValues>
+</CustomData>
+
