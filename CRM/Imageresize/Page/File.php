@@ -41,10 +41,6 @@ class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
       CRM_Core_Error::statusBounce('Could not retrieve the file');
     }
 
-    if ($mimeType && strpos($mimeType, 'image') == '0') {
-      $path = CRM_Imageresize_File::getNewPath($path);
-    }
-
     if (empty($mimeType)) {
       $passedInMimeType = parent::convertBadMimeAliasTypes(CRM_Utils_Request::retrieveValue('mime-type', 'String', $mimeType, FALSE));
       if (!in_array($passedInMimeType, explode(',', Civi::settings()->get('requestableMimeTypes')))) {
@@ -57,6 +53,10 @@ class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
       }
       // Now that we have validated mime-type supplied as much as possible lets now set the MimeType variable/
       $mimeType = $passedInMimeType;
+    }
+
+    if ($mimeType && strpos($mimeType, 'image') == '0') {
+      $path = CRM_Imageresize_File::getNewPath($path);
     }
 
     $buffer = file_get_contents($path);
