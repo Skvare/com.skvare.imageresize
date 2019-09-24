@@ -1,8 +1,9 @@
 # com.skvare.imageresize
 
-This extension allows CiviCRM to Image resize for Contact and Custom Field. it resize all type of images and put into cache directory.
-
+This extension adds image resize capability to CiviCRM for Contact and Custom Field images. The extension handles resizing of all types of images and will put the images into the cache directory
 Image style has to pass into url along with other url parameter.
+
+Functionality can be integrate in Drupal Views, WordPress Plugin to show civicrm contact, custom resized images with good quality to load we page faster as compared to original images.
 
 
 ## Requirements

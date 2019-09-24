@@ -2,7 +2,7 @@
 <extension key="com.skvare.imageresize" type="module">
   <file>imageresize</file>
   <name>Image Resize</name>
-  <description>Resize contact and custom image by passing image style un url</description>
+  <description>This extension adds image resize capability to CiviCRM for Contact and Custom Field images. The extension handles resizing of all types of images and will put the images into the cache directory</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Sunil Pawar</author>
