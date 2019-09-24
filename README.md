@@ -35,3 +35,6 @@ e.g
  /civicrm/contact/imagefile?photo=Logo_bfe0dba6f9eee24d0430016719ad219a.png&amp;image_styles=thumbnail
  /civicrm/file?reset=1&filename=Logo_bfe0dba6f9eee24d0430016719ad219a.png&mime-type=image/png&image_styles=thumbnail
 ```
+Image Style Options
+
+![Screenshot](/images/screenshot.png)
