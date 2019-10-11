@@ -23,6 +23,8 @@ class CRM_Imageresize_File {
    *   create sub dir and copy resize Image to it.
    * @param bool $returnPath = FALSE
    *   When TRUE return new file name path otherwise return url
+   * @param string $targetFile = ""
+   *   Specify custom target directory
    *
    * @return string
    *   Path to image
@@ -31,13 +33,19 @@ class CRM_Imageresize_File {
    *   - When GD is not available.
    *   - When the source file is not an image.
    */
-  public static function resizeImage($sourceFile, $targetWidth, $targetHeight, $suffix = "", $preserveAspect = TRUE, $subDir = NULL, $returnPath = FALSE) {
+  public static function resizeImage($sourceFile, $targetWidth, $targetHeight, $suffix = "", $preserveAspect = TRUE, $subDir = NULL, $returnPath = FALSE, $targetFile = '') {
     if (!file_exists($sourceFile) && $returnPath) {
       return $sourceFile;
     }
-    // figure out the new filename
-    $pathParts = pathinfo($sourceFile);
-    $targetDirectory = $pathParts['dirname'] . DIRECTORY_SEPARATOR;
+    if (!empty($targetFile)) {
+      $pathParts = pathinfo($targetFile);
+      $targetDirectory = $pathParts['dirname'] . DIRECTORY_SEPARATOR;
+    } else {
+      // If empty get it from source file.
+      // figure out the new filename
+      $pathParts = pathinfo($sourceFile);
+      $targetDirectory = $pathParts['dirname'] . DIRECTORY_SEPARATOR;
+    }
     if (!empty($subDir)) {
       $targetDirectory = $targetDirectory . $subDir . DIRECTORY_SEPARATOR;
       CRM_Utils_File::createDir($targetDirectory);
@@ -160,7 +168,7 @@ class CRM_Imageresize_File {
     return $config->imageUploadURL . basename($targetFile);
   }
 
-  public static function getNewPath($path) {
+  public static function getNewPath($path, $targetFile = '') {
     // Functionality to resize image by passing image style in url along with photo name,
     // this will create imange with width and height as suffix to image name
     // e.g img_112112133313.png will be img_112112133313_w150_h150.png
@@ -174,7 +182,7 @@ class CRM_Imageresize_File {
         if ($width && $height) {
           $suffix = '_w' . $width . '_h' . $height;
           try {
-            $path = CRM_Imageresize_File::resizeImage($path, $width, $height, $suffix, TRUE, 'cache', TRUE);
+            $path = CRM_Imageresize_File::resizeImage($path, $width, $height, $suffix, TRUE, 'cache', TRUE, $targetFile);
           } catch (CRM_Core_Exception $e) {
             CRM_Core_Session::singleton()->setStatus($e->getMessage());
           }
