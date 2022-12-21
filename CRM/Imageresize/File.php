@@ -57,7 +57,13 @@ class CRM_Imageresize_File {
       return $targetFile;
     }
     // Check if GD is installed
-    $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
+    $gdSupport = FALSE;
+    if (php_sapi_name() == "cli" && extension_loaded('gd')) {
+      $gdSupport = TRUE;
+    }
+    else {
+      $gdSupport = CRM_Utils_System::getModuleSetting('gd', 'GD Support');
+    }
     if (!$gdSupport) {
       throw new CRM_Core_Exception(ts('Unable to resize image because the GD image library is not currently compiled in your PHP installation.'));
     }
