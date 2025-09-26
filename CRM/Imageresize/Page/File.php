@@ -1,11 +1,27 @@
 <?php
+/*
+ +--------------------------------------------------------------------+
+ | Copyright CiviCRM LLC. All rights reserved.                        |
+ |                                                                    |
+ | This work is published under the GNU AGPLv3 license with some      |
+ | permitted exceptions and without any warranty. For full license    |
+ | and copyright information, see https://civicrm.org/licensing       |
+ +--------------------------------------------------------------------+
+ */
 
+/**
+ *
+ * @package CRM
+ * @copyright CiviCRM LLC https://civicrm.org/licensing
+ */
 class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
 
   /**
    * Run page.
    */
   public function run() {
+    CRM_Utils_Hook::pageRun($this);
+
     $action = CRM_Utils_Request::retrieve('action', 'String', $this);
     $download = CRM_Utils_Request::retrieve('download', 'Integer', $this, FALSE, 1);
     $disposition = $download == 0 ? 'inline' : 'download';
@@ -17,17 +33,17 @@ class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
     // File ID
     $fileId = CRM_Utils_Request::retrieve('id', 'Positive', $this, FALSE);
     $fileName = CRM_Utils_Request::retrieve('filename', 'String', $this, FALSE);
-    if (empty($fileName) && (empty($entityId) || empty($fileId))) {
-      CRM_Core_Error::statusBounce("Cannot access file: Must pass either \"Filename\" or the combination of \"Entity ID\" + \"File ID\"");
+    if (empty($fileName) && empty($fileId)) {
+      CRM_Core_Error::statusBounce('Cannot access file: Must pass either "Filename" or the combination of "File ID" + "Hash"');
     }
 
     if (empty($fileName)) {
-      $hash = CRM_Utils_Request::retrieve('fcs', 'Alphanumeric', $this);
-      if (!CRM_Core_BAO_File::validateFileHash($hash, $entityId, $fileId)) {
-        CRM_Core_Error::statusBounce('URL for file is not valid');
+      $hash = CRM_Utils_Request::retrieve('fcs', 'String', $this);
+      if (!CRM_Core_BAO_File::validateFileHash($hash, NULL, $fileId)) {
+        CRM_Core_Error::statusBounce(ts('URL for file is not valid'));
       }
 
-      list($path, $mimeType) = CRM_Core_BAO_File::path($fileId, $entityId);
+      [$path, $mimeType] = CRM_Core_BAO_File::path($fileId);
     }
     else {
       if (!CRM_Utils_File::isValidFileName($fileName)) {
@@ -38,7 +54,7 @@ class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
     }
 
     if (!$path) {
-      CRM_Core_Error::statusBounce('Could not retrieve the file');
+      CRM_Core_Error::statusBounce(ts('Could not retrieve the file'));
     }
 
     if (empty($mimeType)) {
@@ -61,18 +77,27 @@ class CRM_Imageresize_Page_File extends CRM_Core_Page_File {
 
     $buffer = file_get_contents($path);
     if (!$buffer) {
-      CRM_Core_Error::statusBounce('The file is either empty or you do not have permission to retrieve the file');
+      CRM_Core_Error::statusBounce(ts('The file is either empty or you do not have permission to retrieve the file'));
     }
 
+    // FIXME: Yikes! Deleting records via GET request??
     if ($action & CRM_Core_Action::DELETE) {
-      if (CRM_Utils_Request::retrieve('confirmed', 'Boolean')) {
+      $confirmed = CRM_Utils_Request::retrieve('confirmed', 'Boolean');
+      // Attachment - need to delete entityFile record
+      if ($entityId && $fileId && $confirmed) {
         CRM_Core_BAO_File::deleteFileReferences($fileId, $entityId, $fieldId);
         CRM_Core_Session::setStatus(ts('The attached file has been deleted.'), ts('Complete'), 'success');
-
-        $session = CRM_Core_Session::singleton();
-        $toUrl = $session->popUserContext();
-        CRM_Utils_System::redirect($toUrl);
       }
+      // Just a file field
+      elseif ($fileId && $confirmed) {
+        \Civi\Api4\File::delete(FALSE)
+          ->addWhere('id', '=', $fileId)
+          ->execute();
+        CRM_Core_Session::setStatus(ts('The file has been deleted.'), ts('Complete'), 'success');
+      }
+      $session = CRM_Core_Session::singleton();
+      $toUrl = $session->popUserContext();
+      CRM_Utils_System::redirect($toUrl);
     }
     else {
       CRM_Utils_System::download(
