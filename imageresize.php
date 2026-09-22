@@ -80,10 +80,10 @@ function imageresize_civicrm_pageRun(&$page) {
     if (! $imageURL) {
       return;
     }
-    $matches = array();
+    $matches = [];
     if (preg_match('/filename\=([^&]*)/', $imageURL, $matches)) {
       $path = CRM_Core_Config::singleton()->customFileUploadDir . $matches[1];
-      $matches = array();
+      $matches = [];
       preg_match( '/src="([^"]*)"/i', $imageURL, $matches) ;
       if (!empty($matches)) {
         $url = $matches['1'];
