@@ -178,7 +178,7 @@ class CRM_Imageresize_File {
     // Functionality to resize image by passing image style in url along with photo name,
     // this will create imange with width and height as suffix to image name
     // e.g img_112112133313.png will be img_112112133313_w150_h150.png
-    $imageStyle  = CRM_Utils_Request::retrieve('image_styles', 'String', CRM_Core_DAO::$_nullObject);
+    $imageStyle  = CRM_Utils_Request::retrieve('image_styles', 'String', NULL);
     if ($imageStyle) {
       $imageStyleValue = CRM_Core_DAO::getFieldValue('CRM_Core_DAO_OptionValue', $imageStyle, 'value', 'name');
       if ($imageStyleValue) {
