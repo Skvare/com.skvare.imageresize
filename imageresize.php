@@ -76,7 +76,7 @@ function imageresize_civicrm_pageRun(&$page) {
   $class_name = get_class($page);
   if ($class_name == 'CRM_Contact_Page_View_Summary') {
     $smarty = CRM_Core_Smarty::singleton();
-    $imageURL = CRM_Utils_Array::value('imageURL', $smarty->_tpl_vars);
+    $imageURL = $smarty->getTemplateVars('imageURL');
     if (! $imageURL) {
       return;
     }
