@@ -30,7 +30,7 @@ class CRM_Imageresize_Page_ImageFile extends CRM_Contact_Page_ImageFile {
    * @throws \Exception
    */
   public function run() {
-    $photo  = CRM_Utils_Request::retrieve('photo', 'String', CRM_Core_DAO::$_nullObject);
+    $photo  = CRM_Utils_Request::retrieve('photo', 'String', NULL);
     if (!preg_match('/^[^\/]+\.(jpg|jpeg|png|gif)$/i', $photo)) {
       throw new CRM_Core_Exception(ts('Malformed photo name'));
     }
